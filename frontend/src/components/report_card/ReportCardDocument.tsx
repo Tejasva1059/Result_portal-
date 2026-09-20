@@ -39,6 +39,7 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
   const formatClassName = (cName?: string) => {
     if (!cName || cName.trim() === '' || cName.trim() === '—') return '—';
     const trimmed = cName.trim().toUpperCase();
+    if (trimmed === 'NUR' || trimmed === 'NURSERY') return 'NURSERY';
     if (trimmed === 'KGI' || trimmed === 'KG I' || trimmed === 'KG 1' || trimmed === 'KG-1') return 'KG-I';
     if (trimmed === 'KGII' || trimmed === 'KG II' || trimmed === 'KG 2' || trimmed === 'KG-II' || trimmed === 'KG2') return 'KG-2';
     return cName;
