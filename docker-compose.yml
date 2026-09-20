@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # 1. PostgreSQL Database (Local or Cloud)
+  db:
+    image: postgres:15-alpine
+    container_name: nsps_postgres_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: school_admin
+      POSTGRES_PASSWORD: SunshinePassword@2026
+      POSTGRES_DB: school_portal_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  # 2. FastAPI Backend REST API
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nsps_backend_api
+    restart: unless-stopped
+    environment:
+      DATABASE_URL: postgresql://school_admin:SunshinePassword@2026@db:5432/school_portal_db
+      SECRET_KEY: new_sunshine_public_school_super_secret_jwt_key_2026_indore_73181
+      ACCESS_TOKEN_EXPIRE_MINUTES: 1440
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+
+  # 3. React + TypeScript Frontend
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: nsps_frontend_app
+    restart: unless-stopped
+    ports:
+      - "5173:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

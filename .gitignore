@@ -1,0 +1,35 @@
+# Dependencies
+node_modules/
+*/node_modules/
+__pycache__/
+*/__pycache__/
+*/*/__pycache__/
+*/*/*/__pycache__/
+*.py[cod]
+*$py.class
+
+# Environment variables
+.env
+*.env
+!.env.example
+
+# Build outputs
+dist/
+*/dist/
+build/
+*/build/
+
+# Testing & Cache
+.pytest_cache/
+*/.pytest_cache/
+.pytest_temp_cache/
+*/.pytest_temp_cache/
+test_school.db
+*/test_school.db
+
+# Logs and OS files
+*.log
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
