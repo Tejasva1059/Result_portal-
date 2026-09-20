@@ -36,6 +36,14 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
     return `Mrs. ${trimmed}`;
   };
 
+  const formatClassName = (cName?: string) => {
+    if (!cName || cName.trim() === '' || cName.trim() === '—') return '—';
+    const trimmed = cName.trim().toUpperCase();
+    if (trimmed === 'KGI' || trimmed === 'KG I' || trimmed === 'KG 1' || trimmed === 'KG-1') return 'KG-I';
+    if (trimmed === 'KGII' || trimmed === 'KG II' || trimmed === 'KG 2' || trimmed === 'KG-II' || trimmed === 'KG2') return 'KG-2';
+    return cName;
+  };
+
   const isPending = !percentage || percentage <= 0 || result === 'RESULT PENDING';
 
   return (
@@ -121,7 +129,7 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
                     Class :
                   </td>
                   <td className="py-1.5 px-3 font-black text-slate-950 uppercase tracking-wide">
-                    {student.class_name}
+                    {formatClassName(student.class_name)}
                   </td>
                 </tr>
 
