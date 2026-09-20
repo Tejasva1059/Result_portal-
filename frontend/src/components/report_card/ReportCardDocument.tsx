@@ -22,6 +22,20 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
     }
   };
 
+  const formatFatherName = (name?: string) => {
+    if (!name || name.trim() === '' || name.trim() === '—') return '—';
+    const trimmed = name.trim();
+    if (/^mr\.?\s+/i.test(trimmed)) return trimmed;
+    return `Mr. ${trimmed}`;
+  };
+
+  const formatMotherName = (name?: string) => {
+    if (!name || name.trim() === '' || name.trim() === '—') return '—';
+    const trimmed = name.trim();
+    if (/^mrs\.?\s+/i.test(trimmed)) return trimmed;
+    return `Mrs. ${trimmed}`;
+  };
+
   const isPending = !percentage || percentage <= 0 || result === 'RESULT PENDING';
 
   return (
@@ -117,7 +131,7 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
                     Father's Name :
                   </td>
                   <td className="py-1.5 px-3 font-black text-slate-900 uppercase border-r border-slate-200">
-                    {student.father_name}
+                    {formatFatherName(student.father_name)}
                   </td>
                   <td className="py-1.5 px-3 font-medium text-slate-600 bg-slate-50/60 border-r border-slate-200">
                     Scholar / SSID :
@@ -133,7 +147,7 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
                     Mother's Name :
                   </td>
                   <td className="py-1.5 px-3 font-black text-slate-900 uppercase border-r border-slate-200">
-                    {student.mother_name}
+                    {formatMotherName(student.mother_name)}
                   </td>
                   <td className="py-1.5 px-3 font-medium text-slate-600 bg-slate-50/60 border-r border-slate-200">
                     Date of Birth :
