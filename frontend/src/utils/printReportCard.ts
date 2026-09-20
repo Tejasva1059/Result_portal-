@@ -4,9 +4,10 @@
  * with ZERO spillover, background app bleeding, or trailing empty pages.
  */
 
-export const printSingleReportCard = (elementId: string = 'official-report-card-doc') => {
-  const element = document.getElementById(elementId);
+export const printSingleReportCard = (target: string | HTMLElement = 'official-report-card-doc') => {
+  const element = typeof target === 'string' ? document.getElementById(target) : target;
   if (!element) {
+    console.warn(`Print target not found: ${target}`);
     window.print();
     return;
   }

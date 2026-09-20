@@ -4,10 +4,12 @@ import schoolLogo from '../../assets/school_logo.png';
 
 interface ReportCardDocumentProps {
   data: ReportCardResponse;
+  id?: string;
 }
 
-export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data }) => {
+export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id }) => {
   const { header, student, subjects_marks, totals, result, percentage, division_grade, signatures } = data;
+  const elementId = id || `report-card-doc-${student.id}`;
 
   const formatDate = (dateStr?: string) => {
     if (!dateStr) return '—';
@@ -24,7 +26,7 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data }) 
 
   return (
     <div
-      id="official-report-card-doc"
+      id={elementId}
       className="report-card-print-page bg-white text-slate-900 w-[794px] min-w-[794px] max-w-[794px] h-[1123px] min-h-[1123px] max-h-[1123px] p-[20px] font-sans shadow-2xl print:shadow-none print:p-[14px] print:m-0 box-border flex flex-col justify-between select-text relative overflow-hidden"
       style={{ boxSizing: 'border-box' }}
     >

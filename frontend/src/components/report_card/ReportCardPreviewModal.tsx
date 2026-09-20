@@ -23,12 +23,14 @@ export const ReportCardPreviewModal: React.FC<ReportCardPreviewModalProps> = ({
 
   if (!isOpen || !data) return null;
 
+  const docId = `preview-report-card-${data.student.id}`;
+
   const handlePrint = () => {
-    printSingleReportCard('official-report-card-doc');
+    printSingleReportCard(docId);
   };
 
   const handleDownloadPdf = async () => {
-    const element = document.getElementById('official-report-card-doc');
+    const element = document.getElementById(docId);
     if (!element) {
       error('Report card element not found for export');
       return;
@@ -130,7 +132,7 @@ export const ReportCardPreviewModal: React.FC<ReportCardPreviewModalProps> = ({
         {/* Scrollable Document Container */}
         <div className="flex-1 p-4 sm:p-6 overflow-y-auto bg-slate-300/80 flex justify-center items-start">
           <div className="shadow-2xl my-auto">
-            <ReportCardDocument data={data} />
+            <ReportCardDocument id={docId} data={data} />
           </div>
         </div>
 

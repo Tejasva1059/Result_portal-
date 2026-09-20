@@ -229,7 +229,7 @@ export const ReportCardsPage: React.FC = () => {
         <div id="bulk-report-cards-print-area" className="print-only bulk-print-container">
           {bulkData.map((doc) => (
             <div key={doc.student.id} className="bulk-report-card-wrapper">
-              <ReportCardDocument data={doc} />
+              <ReportCardDocument id={`bulk-report-card-${doc.student.id}`} data={doc} />
             </div>
           ))}
         </div>
