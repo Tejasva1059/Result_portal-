@@ -68,3 +68,11 @@ def root():
         "version": "1.0.0",
         "docs": "/docs"
     }
+
+@app.get("/health")
+@app.get("/api/health")
+def health_check():
+    return {
+        "status": "ok",
+        "school": "New Sunshine Public School"
+    }

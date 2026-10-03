@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
+import { api } from '../services/api';
 import { Lock, User as UserIcon, ArrowRight, Eye, EyeOff, ShieldCheck } from 'lucide-react';
 import schoolLogo from '../assets/school_logo.png';
 
@@ -12,6 +13,11 @@ export const LoginPage: React.FC = () => {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  useEffect(() => {
+    // Pre-warm / wake up backend as soon as user visits login page
+    api.healthCheck();
+  }, []);
 
   const handleLogin = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();

@@ -17,6 +17,10 @@ def seed_database(db: Session = None):
         should_close = True
 
     try:
+        # Fast startup check: if already initialized, skip heavy seeding
+        if db.query(User).first() and db.query(Student).first() and db.query(SchoolSetting).first():
+            return
+
         # 1. School Settings
         setting = db.query(SchoolSetting).first()
         if not setting:

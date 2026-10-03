@@ -278,5 +278,14 @@ export const api = {
       const resp = await fetch(`${API_BASE}/audit-logs?${query.toString()}`, { headers: getAuthHeader() });
       return handleResponse(resp);
     }
+  },
+
+  // Pre-warm backend
+  healthCheck: async (): Promise<void> => {
+    try {
+      await fetch(`${API_BASE}/health`, { method: 'GET' });
+    } catch {
+      // Ignore background pre-warm errors
+    }
   }
 };
