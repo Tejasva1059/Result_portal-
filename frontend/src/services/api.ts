@@ -36,6 +36,14 @@ async function handleResponse<T>(response: Response): Promise<T> {
     if (!window.location.pathname.includes('/login')) {
       window.location.href = '/login';
     }
+    if (response.url && response.url.includes('/auth/login')) {
+      try {
+        const errJson = await response.clone().json();
+        throw new Error(errJson.detail || 'Incorrect username or password');
+      } catch (e: any) {
+        throw new Error(e.message || 'Incorrect username or password');
+      }
+    }
     throw new Error('Session expired. Please log in again.');
   }
 
