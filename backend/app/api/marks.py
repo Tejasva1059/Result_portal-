@@ -118,6 +118,7 @@ def get_student_marks(
         percentage=result.percentage,
         pass_fail_status=result.pass_fail_status.value if result.pass_fail_status else None,
         division_grade=result.division_grade,
+        attendance=result.attendance,
         completion_status=result.completion_status.value
     )
 
@@ -234,6 +235,11 @@ def save_batch_marks(
         result.division_grade = body.division_grade.strip()
         result.finalized_by = current_user.id
         result.finalized_at = datetime.now(timezone.utc)
+    if body.attendance is not None:
+        result.attendance = body.attendance.strip() if body.attendance else None
+        result.finalized_by = current_user.id
+        result.finalized_at = datetime.now(timezone.utc)
+    if body.division_grade is not None or body.attendance is not None:
         db.commit()
 
     # Audit log

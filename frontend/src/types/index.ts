@@ -99,6 +99,7 @@ export interface StudentMarksDetail {
   percentage: number;
   pass_fail_status?: string;
   division_grade?: string;
+  attendance?: string;
   completion_status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETE';
 }
 
@@ -118,6 +119,7 @@ export interface BatchMarksEntryRequest {
   exam_type: 'HALF_YEARLY' | 'ANNUAL';
   marks: MarkEntryItem[];
   division_grade?: string;
+  attendance?: string;
 }
 
 export interface ResultItem {
@@ -134,6 +136,7 @@ export interface ResultItem {
   percentage: number;
   pass_fail_status?: 'PASS' | 'FAIL' | 'SUPPLEMENTARY';
   division_grade?: string;
+  attendance?: string;
   completion_status: 'PENDING' | 'IN_PROGRESS' | 'COMPLETE';
   finalized_by?: number;
   finalized_at?: string;
@@ -198,6 +201,7 @@ export interface ReportCardResponse {
   result: string;
   percentage: number;
   division_grade?: string;
+  attendance?: string;
   completion_status: string;
   signatures: {
     class_teacher_name: string;

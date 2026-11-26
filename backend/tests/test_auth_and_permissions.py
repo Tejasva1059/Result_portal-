@@ -36,15 +36,29 @@ def setup_test_db():
 
 client = TestClient(app)
 
-def login_as(username: str, password: str = "Sunshine@2026"):
-    resp = client.post("/api/auth/login", data={"username": username, "password": password})
+def login_as(username: str, password: str = None):
+    passwords = {
+        "admin.ayush": "nsps@2016",
+        "principal.seema": "NewSunshine@2016",
+        "teacher.nursery": "Rv@classnur",
+        "teacher.kgi": "Su@classkgi",
+        "teacher.kgii": "Cp@classkgii",
+        "teacher.class1": "Cs@class1",
+        "teacher.class2": "Ms@class2",
+        "teacher.class3": "Ss@class3",
+        "teacher.class4": "Cj@class4",
+        "teacher.class6": "Td@class6",
+        "teacher.class7": "Km@class7",
+    }
+    pwd = password or passwords.get(username, "nsps@2016")
+    resp = client.post("/api/auth/login", data={"username": username, "password": pwd})
     assert resp.status_code == 200, f"Login failed for {username}: {resp.text}"
     return resp.json()["access_token"]
 
 def test_two_separate_seema_accounts():
     db = TestingSessionLocal()
-    principal = db.query(User).filter(User.username == "principal_seema").first()
-    kgi_teacher = db.query(User).filter(User.username == "teacher_seema_kgi").first()
+    principal = db.query(User).filter(User.username == "principal.seema").first()
+    kgi_teacher = db.query(User).filter(User.username == "teacher.kgi").first()
     
     assert principal is not None, "Principal Seema account must exist"
     assert kgi_teacher is not None, "KGI Teacher Seema account must exist"
@@ -55,7 +69,7 @@ def test_two_separate_seema_accounts():
     db.close()
 
 def test_ayush_super_admin_full_access():
-    token = login_as("admin_ayush")
+    token = login_as("admin.ayush")
     headers = {"Authorization": f"Bearer {token}"}
     
     # Can get all classes
@@ -74,6 +88,7 @@ def test_ayush_super_admin_full_access():
     payload = {
         "student_id": class_vii_student.id,
         "exam_type": "ANNUAL",
+        "attendance": "195/210",
         "marks": [
             {
                 "subject_id": hindi_sub.id,
@@ -89,7 +104,7 @@ def test_ayush_super_admin_full_access():
     assert resp.status_code == 200, f"Super Admin should be able to update any class marks: {resp.text}"
 
 def test_principal_seema_can_update_any_class_marks():
-    token = login_as("principal_seema")
+    token = login_as("principal.seema")
     headers = {"Authorization": f"Bearer {token}"}
     
     db = TestingSessionLocal()
@@ -113,7 +128,7 @@ def test_principal_seema_can_update_any_class_marks():
     assert resp.status_code == 200, "Principal should be able to update marks for Class VI"
 
 def test_kgi_teacher_seema_class_isolation():
-    token = login_as("teacher_seema_kgi")
+    token = login_as("teacher.kgi")
     headers = {"Authorization": f"Bearer {token}"}
     
     db = TestingSessionLocal()
@@ -155,7 +170,7 @@ def test_kgi_teacher_seema_class_isolation():
     assert resp.status_code == 403, "KGI teacher must NOT update Class IV marks"
 
 def test_charoolata_special_view_all_and_class_iv_write():
-    token = login_as("teacher_charoolata")
+    token = login_as("teacher.class4")
     headers = {"Authorization": f"Bearer {token}"}
     
     db = TestingSessionLocal()
@@ -203,7 +218,7 @@ def test_charoolata_special_view_all_and_class_iv_write():
     assert resp.status_code == 200, "Charoolata should be able to update Class IV marks"
 
 def test_annual_marks_theory_practical_auto_calculation():
-    token = login_as("teacher_reena")  # NUR teacher
+    token = login_as("teacher.nursery")  # NUR teacher
     headers = {"Authorization": f"Bearer {token}"}
     
     db = TestingSessionLocal()
@@ -211,10 +226,11 @@ def test_annual_marks_theory_practical_auto_calculation():
     eng_sub = db.query(Subject).filter(Subject.name == "English").first()
     db.close()
 
-    # Enter Annual Theory=45, Practical=18 -> Expected Annual Total = 63
+    # Enter Annual Theory=45, Practical=18, Attendance=180/200 -> Expected Annual Total = 63
     payload = {
         "student_id": nur_student.id,
         "exam_type": "ANNUAL",
+        "attendance": "180/200",
         "marks": [
             {
                 "subject_id": eng_sub.id,
@@ -229,11 +245,18 @@ def test_annual_marks_theory_practical_auto_calculation():
     resp = client.post("/api/marks/batch", json=payload, headers=headers)
     assert resp.status_code == 200
 
-    # Verify calculated marks in details API
+    # Verify calculated marks and attendance in details API
     resp_details = client.get(f"/api/marks/student/{nur_student.id}", headers=headers)
     assert resp_details.status_code == 200
     data = resp_details.json()
+    assert data["attendance"] == "180/200"
     eng_row = next(r for r in data["rows"] if r["subject_name"] == "English")
     assert eng_row["annual_theory_obtained"] == 45.0
     assert eng_row["annual_practical_obtained"] == 18.0
     assert eng_row["annual_total_obtained"] == 63.0  # 45 + 18 = 63
+
+    # Verify attendance in report card API
+    resp_rc = client.get(f"/api/report-cards/student/{nur_student.id}", headers=headers)
+    assert resp_rc.status_code == 200
+    rc_data = resp_rc.json()
+    assert rc_data["attendance"] == "180/200"

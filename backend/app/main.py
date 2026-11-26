@@ -2,6 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from sqlalchemy import text
 from app.core.config import settings
 from app.core.database import Base, engine, SessionLocal
 from app.services.seed_data import seed_database
@@ -55,6 +56,13 @@ app.include_router(backup_router, prefix=settings.API_V1_STR)
 @app.on_event("startup")
 def on_startup():
     Base.metadata.create_all(bind=engine)
+    # Ensure attendance column exists in results table if running against an existing db
+    try:
+        with engine.connect() as conn:
+            conn.execute(text("ALTER TABLE results ADD COLUMN attendance VARCHAR(50)"))
+            conn.commit()
+    except Exception:
+        pass
     db = SessionLocal()
     try:
         seed_database(db)

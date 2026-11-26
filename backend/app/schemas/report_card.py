@@ -46,5 +46,6 @@ class ReportCardResponse(BaseModel):
     result: str
     percentage: float
     division_grade: Optional[str] = None
+    attendance: Optional[str] = None
     completion_status: str
     signatures: ReportCardSignatures

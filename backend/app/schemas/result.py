@@ -17,6 +17,7 @@ class ResultResponse(BaseModel):
     percentage: float
     pass_fail_status: Optional[PassFailStatus] = None
     division_grade: Optional[str] = None
+    attendance: Optional[str] = None
     completion_status: ResultStatus
     finalized_by: Optional[int] = None
     finalized_at: Optional[datetime] = None
@@ -26,7 +27,8 @@ class ResultResponse(BaseModel):
         from_attributes = True
 
 class DivisionGradeUpdateRequest(BaseModel):
-    division_grade: str
+    division_grade: Optional[str] = None
+    attendance: Optional[str] = None
 
 class ClassResultSummaryResponse(BaseModel):
     class_id: int

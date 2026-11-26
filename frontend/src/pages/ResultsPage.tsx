@@ -30,9 +30,10 @@ export const ResultsPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [loading, setLoading] = useState(false);
 
-  // Division / Grade Modal
+  // Division / Grade & Attendance Modal
   const [editingResult, setEditingResult] = useState<ResultItem | null>(null);
   const [divisionInput, setDivisionInput] = useState('');
+  const [attendanceInput, setAttendanceInput] = useState('');
   const [isSavingDivision, setIsSavingDivision] = useState(false);
 
   // Report Card Preview Modal
@@ -79,18 +80,19 @@ export const ResultsPage: React.FC = () => {
   const handleOpenDivisionModal = (r: ResultItem) => {
     setEditingResult(r);
     setDivisionInput(r.division_grade || '');
+    setAttendanceInput(r.attendance || '');
   };
 
   const handleSaveDivision = async () => {
     if (!editingResult) return;
     setIsSavingDivision(true);
     try {
-      await api.results.updateDivisionGrade(editingResult.student_id, divisionInput);
-      success(`Updated division/grade for ${editingResult.student_name}`);
+      await api.results.updateDivisionGrade(editingResult.student_id, divisionInput, attendanceInput);
+      success(`Updated division/grade & attendance for ${editingResult.student_name}`);
       setEditingResult(null);
       loadResults();
     } catch (err: any) {
-      error(err.message || 'Failed to update division/grade');
+      error(err.message || 'Failed to update division/grade & attendance');
     } finally {
       setIsSavingDivision(false);
     }
@@ -255,6 +257,7 @@ export const ResultsPage: React.FC = () => {
                   <th className="p-3.5 text-center">Percentage</th>
                   <th className="p-3.5 text-center">Result</th>
                   <th className="p-3.5 text-center">Division / Grade</th>
+                  <th className="p-3.5 text-center">Attendance</th>
                   <th className="p-3.5 text-center">Completion</th>
                   <th className="p-3.5 text-right pr-5">Report Card</th>
                 </tr>
@@ -302,12 +305,15 @@ export const ResultsPage: React.FC = () => {
                           <button
                             onClick={() => handleOpenDivisionModal(r)}
                             className="p-1 text-slate-400 hover:text-amber-600 hover:bg-amber-50 rounded"
-                            title="Edit Division/Grade"
+                            title="Edit Division/Grade & Attendance"
                           >
                             <Edit3 className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
+                    </td>
+                    <td className="p-3.5 text-center font-mono font-bold text-slate-700">
+                      {r.attendance || '—'}
                     </td>
                     <td className="p-3.5 text-center">
                       <span
@@ -344,7 +350,7 @@ export const ResultsPage: React.FC = () => {
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/60 backdrop-blur-sm p-4">
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-sm overflow-hidden animate-in fade-in zoom-in-95">
             <div className="bg-navy-950 text-white p-4 flex items-center justify-between">
-              <h3 className="font-bold text-sm">Assign Division / Grade</h3>
+              <h3 className="font-bold text-sm">Assign Division / Grade & Attendance</h3>
               <button onClick={() => setEditingResult(null)} className="text-slate-400 hover:text-white">
                 <X className="w-4 h-4" />
               </button>
@@ -370,6 +376,19 @@ export const ResultsPage: React.FC = () => {
                   onChange={(e) => setDivisionInput(e.target.value)}
                   className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
                   autoFocus
+                />
+              </div>
+
+              <div>
+                <label className="block font-bold text-slate-700 uppercase mb-1.5">
+                  Annual Attendance:
+                </label>
+                <input
+                  type="text"
+                  placeholder="e.g. 185 / 210"
+                  value={attendanceInput}
+                  onChange={(e) => setAttendanceInput(e.target.value)}
+                  className="w-full p-2.5 bg-slate-50 border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-amber-500"
                 />
               </div>
 

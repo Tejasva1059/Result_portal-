@@ -45,6 +45,7 @@ export const MarksEntryPage: React.FC = () => {
   const [annTheoryInputs, setAnnTheoryInputs] = useState<Record<number, string>>({});
   const [annPracticalInputs, setAnnPracticalInputs] = useState<Record<number, string>>({});
   const [divisionGrade, setDivisionGrade] = useState<string>('');
+  const [attendance, setAttendance] = useState<string>('');
 
   // First input ref for auto-focus
   const firstInputRef = useRef<HTMLInputElement>(null);
@@ -96,6 +97,7 @@ export const MarksEntryPage: React.FC = () => {
       const data = await api.marks.getStudentMarks(studentId);
       setMarksDetail(data);
       setDivisionGrade(data.division_grade || '');
+      setAttendance(data.attendance || '');
 
       // Populate input states
       const newHy: Record<number, string> = {};
@@ -210,7 +212,8 @@ export const MarksEntryPage: React.FC = () => {
         student_id: selectedStudentId,
         exam_type: examType,
         marks: markItems,
-        division_grade: divisionGrade.trim() || undefined,
+        division_grade: examType === 'ANNUAL' ? (divisionGrade.trim() || undefined) : undefined,
+        attendance: examType === 'ANNUAL' ? (attendance.trim() || undefined) : undefined,
       };
 
       const res = await api.marks.saveBatchMarks(payload);
@@ -598,18 +601,32 @@ export const MarksEntryPage: React.FC = () => {
                   </div>
                 </div>
               ) : (
-                /* Annual Exam: Theory + Practical + Calculated % + Division / Grade + Result */
+                /* Annual Exam: Theory + Practical + Calculated % + Division / Grade + Attendance + Result */
                 <div className="p-4 rounded-2xl bg-slate-50 border border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4">
-                  <div className="flex items-center gap-3 w-full sm:w-auto">
-                    <span className="font-bold text-xs text-slate-700 uppercase">Division / Grade:</span>
-                    <input
-                      type="text"
-                      placeholder="e.g. 1st, 2nd, A+"
-                      value={divisionGrade}
-                      disabled={!isAuthorizedToEdit}
-                      onChange={(e) => setDivisionGrade(e.target.value)}
-                      className="w-32 py-1.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
-                    />
+                  <div className="flex flex-wrap items-center gap-4 w-full sm:w-auto">
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-xs text-slate-700 uppercase">Division / Grade:</span>
+                      <input
+                        type="text"
+                        placeholder="e.g. 1st, 2nd, A+"
+                        value={divisionGrade}
+                        disabled={!isAuthorizedToEdit}
+                        onChange={(e) => setDivisionGrade(e.target.value)}
+                        className="w-28 py-1.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                      />
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <span className="font-bold text-xs text-slate-700 uppercase">Attendance:</span>
+                      <input
+                        type="text"
+                        placeholder="e.g. 185 / 210"
+                        value={attendance}
+                        disabled={!isAuthorizedToEdit}
+                        onChange={(e) => setAttendance(e.target.value)}
+                        className="w-32 py-1.5 px-3 bg-white border border-slate-300 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:ring-2 focus:ring-sky-500"
+                      />
+                    </div>
                   </div>
 
                   <div className="flex items-center gap-4 text-xs font-bold">

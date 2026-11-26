@@ -22,6 +22,7 @@ class BatchMarksEntryRequest(BaseModel):
     exam_type: ExamType
     marks: List[MarkEntryItem]
     division_grade: Optional[str] = None
+    attendance: Optional[str] = None
 
 class MarkResponse(BaseModel):
     id: int
@@ -77,4 +78,5 @@ class StudentMarksDetailResponse(BaseModel):
     percentage: float
     pass_fail_status: Optional[str] = None
     division_grade: Optional[str] = None
+    attendance: Optional[str] = None
     completion_status: str

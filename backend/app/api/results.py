@@ -38,6 +38,7 @@ def serialize_result(r: Result) -> ResultResponse:
         percentage=r.percentage,
         pass_fail_status=r.pass_fail_status,
         division_grade=r.division_grade,
+        attendance=r.attendance,
         completion_status=r.completion_status,
         finalized_by=r.finalized_by,
         finalized_at=r.finalized_at,
@@ -174,7 +175,10 @@ def update_division_grade(
         result = calculate_student_result(db, student_id)
 
     old_val = result.division_grade
-    result.division_grade = body.division_grade.strip()
+    if body.division_grade is not None:
+        result.division_grade = body.division_grade.strip()
+    if body.attendance is not None:
+        result.attendance = body.attendance.strip() if body.attendance else None
     result.finalized_by = current_user.id
     result.finalized_at = datetime.now(timezone.utc)
     db.commit()
@@ -188,7 +192,7 @@ def update_division_grade(
         entity_id=result.id,
         student_name=student.student_name,
         class_name=student.student_class.name,
-        details=f"Division/Grade changed from '{old_val}' to '{result.division_grade}'"
+        details=f"Division/Grade: '{old_val}' -> '{result.division_grade}', Attendance: '{result.attendance}'"
     )
 
     return serialize_result(result)

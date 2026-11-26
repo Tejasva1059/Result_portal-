@@ -145,6 +145,7 @@ def build_report_card_payload(db: Session, student: Student) -> ReportCardRespon
         result=result_text,
         percentage=res.percentage,
         division_grade=res.division_grade,
+        attendance=res.attendance if res else None,
         completion_status=res.completion_status.value,
         signatures=signatures
     )

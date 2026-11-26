@@ -201,11 +201,11 @@ export const api = {
       const resp = await fetch(`${API_BASE}/results/all-classes`, { headers: getAuthHeader() });
       return handleResponse(resp);
     },
-    updateDivisionGrade: async (studentId: number, divisionGrade: string): Promise<ResultItem> => {
+    updateDivisionGrade: async (studentId: number, divisionGrade?: string, attendance?: string): Promise<ResultItem> => {
       const resp = await fetch(`${API_BASE}/results/student/${studentId}/division-grade`, {
         method: 'PUT',
         headers: getAuthHeader(),
-        body: JSON.stringify({ division_grade: divisionGrade }),
+        body: JSON.stringify({ division_grade: divisionGrade, attendance }),
       });
       return handleResponse(resp);
     },

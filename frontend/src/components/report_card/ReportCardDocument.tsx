@@ -8,7 +8,7 @@ interface ReportCardDocumentProps {
 }
 
 export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id }) => {
-  const { header, student, subjects_marks, totals, result, percentage, division_grade, signatures } = data;
+  const { header, student, subjects_marks, totals, result, percentage, division_grade, attendance, signatures } = data;
   const elementId = id || `report-card-doc-${student.id}`;
 
   const formatDate = (dateStr?: string) => {
@@ -314,6 +314,14 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
               <span className="text-slate-800 uppercase font-black text-[11.5px]">DIVISION / GRADE :</span>
               <div className="border border-slate-700 bg-white w-20 h-6.5 flex items-center justify-center font-black text-slate-950 text-xs uppercase">
                 {!isPending && division_grade ? division_grade : ''}
+              </div>
+            </div>
+
+            {/* Attendance */}
+            <div className="flex items-center gap-2">
+              <span className="text-slate-800 uppercase font-black text-[11.5px]">ATTENDANCE :</span>
+              <div className="border border-slate-700 bg-white min-w-20 px-2 h-6.5 flex items-center justify-center font-black text-slate-950 text-xs">
+                {attendance || '—'}
               </div>
             </div>
           </div>

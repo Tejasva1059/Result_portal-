@@ -27,6 +27,7 @@ class Result(Base):
     
     pass_fail_status = Column(SQLEnum(PassFailStatus), nullable=True)
     division_grade = Column(String(50), nullable=True)  # Entered manually by teacher e.g. "1st", "2nd", "3rd", "A+", etc.
+    attendance = Column(String(50), nullable=True)  # Annual attendance entered by teacher e.g. "185/210", "185", etc.
     completion_status = Column(SQLEnum(ResultStatus), default=ResultStatus.PENDING, nullable=False)
     
     finalized_by = Column(Integer, ForeignKey("users.id"), nullable=True)
