@@ -286,7 +286,7 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
           {/* ================= 4. RESULT SUMMARY BAR ================= */}
           <div className="border border-slate-300 p-2.5 bg-slate-50/80 rounded-xs flex items-center justify-between text-xs font-bold shadow-2xs">
             {/* Result */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <span className="text-slate-800 uppercase font-black text-[11.5px]">RESULT :</span>
               <span
                 className={`text-[12px] uppercase font-black tracking-wider ${
@@ -302,25 +302,25 @@ export const ReportCardDocument: React.FC<ReportCardDocumentProps> = ({ data, id
             </div>
 
             {/* Percentage */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <span className="text-slate-800 uppercase font-black text-[11.5px]">PERCENTAGE :</span>
-              <div className="border border-slate-700 bg-white w-28 h-6.5 flex items-center justify-center font-mono font-black text-slate-950 text-xs">
-                {!isPending && percentage > 0 ? `${percentage.toFixed(2)} %` : ''}
+              <div className="border border-slate-700 bg-white min-w-24 px-2 h-[26px] flex items-center justify-center font-mono font-black text-slate-950 text-xs">
+                {!isPending && percentage > 0 ? `${percentage.toFixed(2)} %` : '—'}
               </div>
             </div>
 
             {/* Division / Grade */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <span className="text-slate-800 uppercase font-black text-[11.5px]">DIVISION / GRADE :</span>
-              <div className="border border-slate-700 bg-white w-20 h-6.5 flex items-center justify-center font-black text-slate-950 text-xs uppercase">
-                {!isPending && division_grade ? division_grade : ''}
+              <div className="border border-slate-700 bg-white min-w-20 px-2 h-[26px] flex items-center justify-center font-black text-slate-950 text-xs uppercase">
+                {!isPending && division_grade ? division_grade : '—'}
               </div>
             </div>
 
             {/* Attendance */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
               <span className="text-slate-800 uppercase font-black text-[11.5px]">ATTENDANCE :</span>
-              <div className="border border-slate-700 bg-white min-w-20 px-2 h-6.5 flex items-center justify-center font-black text-slate-950 text-xs">
+              <div className="border border-slate-700 bg-white min-w-20 px-2 h-[26px] flex items-center justify-center font-black text-slate-950 text-xs">
                 {attendance || '—'}
               </div>
             </div>
